@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: home</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+		{% include "plotr/include_html_head.html" %}
+		<style>
+		a.plotr-home-jumbotron-btn{
+			margin:5px;
+		}
+		a.plotr-home-example{
+			height:250px;
+		}
+		</style>
+	</head>
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<div class="jumbotron">
+				<h1>Plotr <small> The Simple Data Sharer </small></h1>				
+				<h4>Explore recent datasets, or upload your own</h4>
+				<div class="row">										
+					<a href = "/upload" class="plotr-home-jumbotron-btn btn btn-success pull-right"><i class="fa fa-upload"></i> Upload</a>						
+					<a href = "/k5X6s" class="plotr-home-jumbotron-btn btn btn-info pull-right">Sample</a>
+				</div>
+			</div>
+			<div class="container clearfix" style="text-align:center">
+			{% for dataset_id, dataset_title in latest.items %}
+				<a href = "/{{ dataset_id }}" class="plotr-home-example col-xs-12 col-sm-5 col-lg-3" style="">
+					<i class="fa fa-bar-chart" style="font-size:10em;"></i><br/>
+					<span style="font-size:2em;">
+						Explore <strong>{{ dataset_title }}</strong>
+					</span>
+				</a>				
+			{% endfor %}
+			</div>
+		</div>
+	</body>
+</html>

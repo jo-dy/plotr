@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: {{ title }} :: visual</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+		{% include "plotr/include_html_head.html" %}
+		<script language="javascript">
+			$(document).ready(function() { 
+
+				{% if n != -1 and n|length > 1 %}   
+					var numberOfVariables = {{ n|length }};
+				{% endif %}
+				$("#navbar-visualize-view-link").addClass("active");
+
+				$("#go-button").click( function(){
+					try{
+						var vVars = [];
+						for(var ctr = 1; ctr <= numberOfVariables; ctr++){
+							v = $("#variable-" + ctr).text();
+							if(v == "") { return; }							
+							vVars.push(v);
+						}
+						vString = vVars.join("+");
+						nURL = "{{requestpath}}" + vString;
+						window.location.href = nURL;						
+					}catch(e){
+						console.log(e);
+					}
+				} );
+
+				$("[id^=select-variable]").click( function(){
+					//$("#select-variable-1-WinterRain").attr("id")
+					var vSetting = $(this).attr("id"); //.replace("select-variable-", "");
+					vSetting = vSetting.replace("select-variable-", "");					
+					console.log(vSetting);
+					vSettings = vSetting.split("-");
+					try{
+						varNumber = vSettings[0];
+						varValue = vSettings[1];
+						$("#variable-" + varNumber).text(varValue);
+					}catch(e){
+						console.log(e);
+					}
+				} );
+
+
+			});
+		</script>
+	</head>
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h1>{{ title }}</h1>
+			{% if n == -1 %}
+				<h3>Unknown visualization type {{ viz_type }}.</h3>
+				<a class ="btn btn-primary" role="button" href = "/{{data_id}}">Go Back</a>
+			{% elif n|length == 1 %}		
+				<h3>To prepare your {{ viz_type }}, select from the options below:</h3>			
+					<h4>Select variable</h4>
+					{% for v in variables %}					
+							<a class="btn btn-info" role="button" href = "{{ requestpath }}{{ v }}">{{ v }}</a>					
+					{% endfor %}	
+			{% else %}
+				{% for vctr in n %}
+					<h4>Select variable {{ vctr }} <small><span id = "variable-{{vctr}}"></span></small></h4>
+					{% for v in variables %}
+							<a id = "select-variable-{{vctr}}-{{v}}" class="btn btn-info" role="button" href = "#">{{ v }}</a>
+					{% endfor %}
+				{% endfor %}
+				<div style = "padding-top:15px;">
+					<a id="go-button" class="btn btn-primary" role="button" href = "#">Go</a>	
+				</div>
+			{% endif %}		
+		</div>
+	</body>
+</html>

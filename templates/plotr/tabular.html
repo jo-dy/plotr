@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: {{ title }} :: tabular</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+		{% include "plotr/include_html_head.html" %}
+		<script language = "javascript">
+
+			function warn(s){				
+				if(s===undefined){
+					$("#tab-view-field-warn > div.alert-content").html("");
+					$("#tab-view-field-warn").hide();	
+				}else{
+					$("#tab-view-field-warn > div.alert-content").html(s);
+					$("#tab-view-field-warn").show();
+				}
+			}
+
+			function stats(s){
+				if(s===undefined){
+					$("#tab-view-field-statinfo > div.alert-content").html("");
+					$("#tab-view-field-statinfo").hide();	
+				}else{
+					$("#tab-view-field-statinfo > div.alert-content").html(s);
+					$("#tab-view-field-statinfo").show();
+				}
+			}
+
+			var sheetData = null;
+			
+			$(document).ready(function() {    					
+				try{
+					sheetData = JSON.parse($("#json-table-data-cache").text());
+				}catch(e){
+					warn("I am terribly sorry, but it seems there has been an error parsing the table data.<br/>I would like to personally assure you we've got top men working on it. Top. Men.<br/><br/>Details of the error: <br/>"+e);
+					return;
+				}
+    			$("#sheet_table tbody").append("<tr></tr>");
+    			nFields = sheetData['headers'].length;
+    			for(r = 0; r < nFields; r++){
+    				h = sheetData['headers'][r];
+    				$("#sheet_table thead tr").append
+    					("<th data-dynatable-column=\""+ h+"\">" + h +  "</th>");	
+    			}    			
+				$("#sheet_table").dynatable({
+			      dataset: {
+			        records: sheetData['data'],
+			      }
+		    	});    			 
+
+				$(".dynatable-sort-header").hover(						
+					function(evt){		//handlerIn
+						fieldName = evt.target.text
+						if( fieldName && !sheetData.stats.hasOwnProperty(fieldName)){
+							fieldName = fieldName.substring(0,fieldName.length-2);
+						}
+						if(sheetData.stats.hasOwnProperty(fieldName)){
+							statOutput = "";
+							statOutput += "<strong>" + fieldName + "</strong>" +
+								"<ul>";
+							for(var key in sheetData.stats[fieldName]){
+								statOutput +=
+								 "<li>" + key + ": " + sheetData.stats[fieldName][key] + "</li>";
+							}
+							statOutput += "</ul>";
+							stats(statOutput);
+						}
+					},
+					function(evt){		//handlerOut						
+						return;
+					}
+				);
+
+				$("#tab-view-field-statinfo > button").bind('click', function(){stats();} );
+				$("#tab-view-field-warn > button").bind('click', function(){warn();});
+				$("#navbar-tabular-view-link").addClass("active");
+
+			});
+
+			
+		</script>
+		<style>
+			#sheet_table th{
+				/*background-color: lightgray;*/
+				background-color: white;
+			}
+			#sheet_table a{
+				color: black;
+			}
+			#tab-view-field-statinfo{
+				display: none;
+			}
+			#tab-view-field-warn{
+				display: none;
+			}
+			#json-table-data-cache{
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h1>{{ title }}</h1>		
+			<div id = "tab-view-field-warn" class="alert alert-danger" role="alert">
+				<button type="button" class="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div class="alert-content"></div>
+			</div>
+			<div id = "tab-view-field-statinfo" class="alert alert-info" role="alert">
+				<button type="button" class="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div class="alert-content"></div>
+			</div>
+			<table id = "sheet_table" class="table table-bordered table-hover table-condensed table-responsive">
+				<thead>
+					<tr></tr>
+				</thead>
+				<tbody>				
+				</tbody>
+			</table>
+			<textarea id = "json-table-data-cache">{{ contents_json|safe }}</textarea>
+		</div>
+	</body>
+
+</html>

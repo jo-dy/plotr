@@ -1,0 +1,55 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header pull-left">      
+      <a class="navbar-brand" href="/" style="padding: 0px;"><img src = "/static/logo.png"/></a>
+    </div>
+    <div class="navbar-header pull-right">
+        <span class="nav navbar-nav pull-left" style="margin: 8px;">
+          <!--<a  role="button" class="btn btn-success" href="#">No Collapse</a>-->
+          <a role="button" class="btn btn-success" href="/upload"><i class="fa fa-upload"></i> Upload</a>
+        </span>
+        <!--<a role="button" class="btn btn-success" href="/upload"><i class="fa fa-upload"></i> Upload</a>-->
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">      
+      <ul class="nav navbar-nav">        
+        {% if sharelink %}
+          <li class="dropdown" id="navbar-share-view-link" >
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-share-alt"></i> Share<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li id="navbar-share-facebook-link"><a href="http://www.facebook.com/sharer.php?u={{ sharelink|urlencode }}"><i class="fa fa-facebook-square"></i> Facebook</a></li>            
+              <li id="navbar-share-reddit-link"><a href="//www.reddit.com/submit?url={{ sharelink|urlencode }}&title=Shared+on+Plotr{% if title %}+-+{{ title|urlencode }}{% endif %}"><i class="fa fa-reddit-square"></i> Reddit</a></li>  
+              <li id="navbar-share-googleplus-link"><a href="https://plusone.google.com/_/+1/confirm?hl=en&url={{ sharelink|urlencode }}"><i class="fa fa-google-plus-square"></i> Google+</a></li>
+              <li id="navbar-share-googleplus-link"><a href="http://twitter.com/share?url={{ sharelink|urlencode }}&text=Shared+on+Plotr{% if title %}+-+{{ title|urlencode }}{% endif %}"><i class="fa fa-twitter-square"></i> Twitter</a></li>
+            </ul>
+          </li>
+        {% endif %}
+          
+        {%if data_id  %}
+          <li class="dropdown" id="navbar-visualize-view-link" >
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Visualize <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li id="navbar-visualize-histogram-view-link"><a href="/{{ data_id }}/v/histogram">Histogram</a></li>            
+              <li><a href="/{{ data_id }}/v/scatterplot"id="navbar-visualize-scatterplot-view-link">Scatterplot</a></li>            
+              <li class="divider"></li>
+              <li><a href="#">More coming soon...</a></li>            
+            </ul>
+          </li>        
+          <li id = "navbar-tabular-view-link"><a href="/{{ data_id }}/tabular">Tabular</a></li>
+          <li id = "navbar-summary-view-link"><a href="/{{ data_id }}/">Summary</a></li>
+        {% endif %}
+        
+        <!--<li id = "navbar-summary-view-link"><a href="#"></a></li>-->
+                
+      </ul>      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>

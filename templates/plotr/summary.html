@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: {{ title }} :: summary</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+		{% include "plotr/include_html_head.html" %}
+		<script language = "javascript">
+			function warn(s){				
+				if(s===undefined){
+					$("#tab-view-field-warn > div.alert-content").html("");
+					$("#tab-view-field-warn").hide();	
+				}else{
+					$("#tab-view-field-warn > div.alert-content").html(s);
+					$("#tab-view-field-warn").show();
+				}
+			}
+
+			function generateSummaryPanel(varName, featureSet){
+				panelHTML = '<div class="col-xs-12 col-sm-6"><div class="panel panel-info" style="word-wrap: break-word;">'+
+  							'	<div class="panel-heading">'+varName+'</div>'+
+							'		<div class="panel-body">'+
+							'			<ul>';
+				for(var feature in featureSet){
+					if (featureSet.hasOwnProperty(feature)) {
+						panelHTML +='<li>'+
+										feature + 
+										' <i class="fa fa-long-arrow-right"></i> ' +
+										featureSet[feature] +
+									'</li>';
+					}
+				}    
+				panelHTML +='	</ul>' +
+							'  </div>' +
+							'</div></div>';
+				return panelHTML;
+			}
+
+			var sheetData = null;
+
+			$(document).ready(function() {   
+				$("#navbar-summary-view-link").addClass("active");
+				
+				try{
+					sheetData = JSON.parse($("#json-table-data-cache").text());
+					stats = sheetData["stats"];
+					console.log(stats);
+					for (var key in stats) {
+						h = generateSummaryPanel(key, stats[key]);
+					  	if (stats.hasOwnProperty(key)) {		
+					  		h = generateSummaryPanel(key, stats[key]);			  	
+					  		$("#variable-summary-container").append(h);					    	
+				    	}
+					}					
+				}catch(e){
+					warn("I am terribly sorry, but it seems there has been an error parsing the table data.<br/>I would like to personally assure you we've got top men working on it. Top. Men.<br/><br/>Details of the error: <br/>"+e);
+					return;
+				}
+			});
+		</script>
+		<style>
+			#tab-view-field-statinfo{
+				display: none;
+			}
+			#tab-view-field-warn{
+				display: none;
+			}
+			#json-table-data-cache{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h1>{{ title }}</h1>
+			<div class="container">
+				<a role = "button" class="btn btn-info" href="/{{ data_id }}/tabular"><i class="fa fa-table"></i> View Data</a>
+				<a role = "button" class="btn btn-info" href="/{{ data_id }}/v/histogram">Explore: Histogram</a>
+				<a role = "button" class="btn btn-info" href="/{{ data_id }}/v/scatterplot">Explore: Scatterplot</a>
+			</div>						
+			<div id = "tab-view-field-warn" class="alert alert-danger" role="alert">
+				<button type="button" class="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div class="alert-content"></div>
+			</div>
+			<div id = "tab-view-field-statinfo" class="alert alert-info" role="alert">
+				<button type="button" class="close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<div class="alert-content"></div>
+			</div>
+			<div class = "container" id = "variable-summary-container">
+				<h2>Summary of Variables</h2>
+			</div>
+		</div>
+	<textarea id = "json-table-data-cache">{{ contents_json|safe }}</textarea>
+	</body>
+</html>

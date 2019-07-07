@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: upload</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+	</head>
+
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h1>File Upload</h1>
+			{% if data_id %}
+				<h3>{{ data_id }} </h3>
+				<a role="button" class="btn btn-primary" href = "/{{ data_id }}/tabular">Click to view</a>
+			{% else %}
+				<h3>Upload did not complete.</h3>
+				<a role="button" class="btn btn-primary" href = "/upload"> Click to Retry</a>
+			{% endif %}
+			{% if warnings %}
+				<h4>Warnings</h4>
+				<ul>
+				{% for warn in warnings %}	
+					<li>{{ warn }}</li>	
+				{% endfor %}
+				</ul>
+			{%endif %}
+		</div>
+	</body>
+</html>

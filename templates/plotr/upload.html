@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: upload</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+	</head>
+
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h3>Upload Data <small> (CSV only for now)</small></h3>
+
+			<!-- Upload form. Note enctype attribute! -->
+			<form action="{% url "upload" %}" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.non_field_errors }}
+				<p>
+					{{ form.title.label_tag }} {{ form.title.help_text }}
+					{{ form.title.errors}}
+					{{ form.title}}
+				</p>
+				{{ form.docfile.label_tag }} {{ form.docfile.help_text }}
+				<p>
+					{{ form.docfile.errors }}
+					{{ form.docfile }}
+				</p>
+
+				<input type="submit" class = "btn btn-primary" value="Upload" />
+			</form>
+		</div>
+		<div class="container" style="padding-top:20px;">
+			<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-xs-12 col-sm-6">
+					<div class="panel panel-info">
+						<div class="panel-heading">
+		    				<h3 class="panel-title">Coming Soon</h3>
+		  				</div>
+		  				<div class="panel-body">
+		  					<ul>
+		  						<li><strong>Improved Responsiveness for larger files</strong></li>
+		    					<li>Uploading in other formats like xlsx</li>
+		    					<li>Drag &amp; Drop Uploading</li>
+							</ul>
+		  				</div>				
+					</div>
+				</div>
+				<div class="col-sm-3"></div>
+			</div>
+		</div>
+	</body>
+</html>
+
+

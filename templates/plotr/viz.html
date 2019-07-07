@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{% include "plotr/sitename" %} :: {{ title }} :: visual</title>	
+		{% include "plotr/include_js.html" %}
+		{% include "plotr/include_css.html" %}
+		{% include "plotr/include_html_head.html" %}
+		<script language="javascript">
+			$(document).ready(function() {    
+				$("#navbar-visualize-view-link").addClass("active");
+			});
+		</script>
+	</head>
+	<body>
+		{% include "plotr/navbar.html" %}
+		<div class="container-fluid">
+			<h1>{{ title }}</h1>
+			<img src = "{{ img_path }}" class="img-responsive" alt = "Graphical Plot Output"/>
+		</div>
+	</body>
+</html>
